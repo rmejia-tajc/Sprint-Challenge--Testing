@@ -19,6 +19,22 @@ server.get("/games", async (req, res) => {
   }
 });
 
+server.get("/games/:id", async (req, res) => {
+  try {
+    const game = await Games.findById(req.params.id);
+
+    if (game.length > 0) {
+      res.status(200).json(game);
+    } else {
+      res
+        .status(404)
+        .json({ message: "The game with the specified ID does not exist." });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 server.post("/games", async (req, res) => {
   if (!req.body.title || !req.body.genre) {
     res.status(422).json({
@@ -31,6 +47,23 @@ server.post("/games", async (req, res) => {
     } catch (error) {
       res.status(500).json(error);
     }
+  }
+});
+
+server.delete("/games/:id", async (req, res) => {
+  try {
+    const count = await Games.remove(req.params.id);
+
+    if (count > 0) {
+      res.status(204).end();
+    } else {
+      res
+        .status(404)
+        .json({ message: "The game with the specified ID does not exist." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "The game could not be removed" });
   }
 });
 

@@ -2,11 +2,17 @@ const db = require("../data/dbConfig.js");
 
 module.exports = {
   find,
-  insert
+  findById,
+  insert,
+  remove
 };
 
 function find() {
   return db("games");
+}
+
+function findById(id) {
+  return db("games").where({ id: Number(id) });
 }
 
 async function insert(game) {
@@ -15,4 +21,10 @@ async function insert(game) {
   return db("games")
     .where({ id })
     .first();
+}
+
+function remove(id) {
+  return db("games")
+    .where("id", Number(id))
+    .del();
 }
